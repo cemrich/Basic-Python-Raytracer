@@ -89,15 +89,15 @@ class Camera(object):
 
                         spec = reflectedLight.angle(ray.direction*(-1))
                         normalizedSpec = math.cos(spec)
-                        #normalizedSpec = normalizedSpec if normalizedSpec > 0 else 0
+                        normalizedSpec = normalizedSpec if normalizedSpec > 0 else 0
                         #print normalizedSpec
-                        color = color * (normalizedDiff*0) + white * (normalizedSpec * 1)
+                        color = color * (normalizedDiff*1) + white * (normalizedSpec**5 * 1)
 
                 #print color
-                #color = [255 if c > 255 else c for c in color.vec]
+                color = [255 if c > 255 else c for c in color.vec]
                 #colorValue = self.colorFromDistance(minDist)
-                #render_func(x, y, color[0], color[1], color[2])
-                render_func(x, y, color.x, color.y, color.z)
+                render_func(x, y, color[0], color[1], color[2])
+                #render_func(x, y, color.x, color.y, color.z)
 		
     def __repr__(self):
         return 'Camera(position:%s, up:%s, f_point:%s, fieldOfView:%s, x:%s, y:%s, z:%s)' % (repr(self.position), repr(self.up), repr(self.f_point), repr(self.fieldOfView), repr(self.x), repr(self.y), repr(self.z))

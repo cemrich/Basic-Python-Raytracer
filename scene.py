@@ -8,8 +8,8 @@ import math
 
 
 FIELD_OF_VIEW = math.pi / 4.0 # 45 Grad
-WIDTH = 200
-HEIGHT = 150
+WIDTH = 400
+HEIGHT = 300
 
 lightList = [Light(Point(30,30,10))]
 objectList = [Sphere(Point(2.5,3,-10), 2),
