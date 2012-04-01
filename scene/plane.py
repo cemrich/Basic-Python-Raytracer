@@ -1,3 +1,6 @@
+from material import Material
+from geometry import Vector
+
 
 class Plane(object):
 
@@ -5,8 +8,10 @@ class Plane(object):
         self.point = point
         self.normal = normal.normalized()
 
+        self.material = Material(Vector(255, 255, 255))
+
     def __repr__(self):
-        return "Plane(%s, %S)" % (repr(self.point), repr. self.normal)
+        return "Plane(%s, %s)" % (repr(self.point), repr(self.normal))
 
     def intersectionParameter(self, ray):
         op = ray.origin - self.point

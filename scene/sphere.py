@@ -1,11 +1,13 @@
 import math
+from material import Material
+from geometry import Vector
 
 class Sphere(object):
     def __init__(self, center, radius):
         self.center = center # point
         self.radius = radius # scalar
 
-        self.material = Material(0, 255, 0)
+        self.material = Material(Vector(0, 255, 0))
 
         print "Kugel initialisiert:", repr(self)
 
@@ -25,11 +27,6 @@ class Sphere(object):
         return (p - self.center).normalized()
 
 
-class Material(object):
 
-    def __init__(self, r, g, b):
-        self.r = r
-        self.g = g
-        self.b = b
         
         

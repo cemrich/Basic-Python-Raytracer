@@ -12,9 +12,9 @@ WIDTH = 200
 HEIGHT = 150
 
 lightList = [Light(Point(30,30,10))]
-objectList = [Plane(Point(0,0,0), Vector(0,1,0)),
-              Sphere(Point(2.5,3,-10), 2),
+objectList = [Sphere(Point(2.5,3,-10), 2),
               Sphere(Point(-2.5,3,-10), 2),
+              Plane(Point(0,0,0), Vector(0,1,0)),
               Sphere(Point(0,7,-10), 2)]
 
 def render_pix(x, y, r, g, b):
@@ -33,7 +33,7 @@ canvas.pack()
 
 camera = Camera(Point(0,2,10), Vector(0,1,0), Point(0,3,0), FIELD_OF_VIEW)
 camera.setScreenSize(WIDTH, HEIGHT)
-camera.render(render_pix, objectList)
+camera.render(render_pix, objectList, lightList)
 
 # start
 mw.mainloop()

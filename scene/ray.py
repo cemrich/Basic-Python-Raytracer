@@ -8,3 +8,8 @@ class Ray(object):
 
     def pointAtParameter(self, t):
         return self.origin + self.direction.scale(t)
+
+    def reflect(self, point, normal):
+        planeNormal = self.direction.cross(normal)
+        newDir = (planeNormal*(-1)).cross(self.direction).cross(planeNormal)
+        return Ray(point, newDir)

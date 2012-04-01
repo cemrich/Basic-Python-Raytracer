@@ -22,6 +22,11 @@ class Point(object):
         newVec = tuple(map(lambda coords: coords[0]-coords[1], zip(self.point, otherPoint.point)))
         return Vector(newVec)
 
+    def __add__(self, vector):
+        '''Point + Vector = Point'''
+        assert(type(vector) == Vector)
+        newPoint = tuple(map(lambda coords: coords[0]+coords[1], zip(self.point, vector.vec)))
+        return Point(newPoint)
 
 if __name__ == '__main__':
     

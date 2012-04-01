@@ -2,6 +2,8 @@
 
 import math
 from ray import Ray
+from scene import *
+from geometry import *
 
 class Camera(object):
     def __init__(self, position, up, f_point, fieldOfView):
@@ -55,22 +57,47 @@ class Camera(object):
 
         return colorValue
 
-    def getMinDist(self, ray, objectList):
+    def getMinDistAndObj(self, ray, objectList):
         minDist = float('inf')
+        minObject = None
         for obj in objectList:
-            hitDist = obj.intersectionParameter(ray)
-            if hitDist and hitDist > 0 and hitDist < minDist:
-                minDist = hitDist
-        return minDist
-
-    def render(self, render_func, objectList):
+            dist = obj.intersectionParameter(ray)
+            if dist and dist > 0 and dist < minDist:
+                minDist = dist
+                minObject = obj
+        return (minDist, minObject)
+                    
+    def render(self, render_func, objectList, lightList):
         steps = 1
+        white = Vector(255,255,255)
         for y in range(0, self.height, steps):
             for x in range(0, self.width, steps):
+                color = Vector(0,0,0)
                 ray = self.build_ray(x, y)
-                minDist = self.getMinDist(ray, objectList)
-                colorValue = self.colorFromDistance(minDist)
-                render_func(x, y, colorValue, colorValue, colorValue) 
+                (dist, obj) = self.getMinDistAndObj(ray, objectList)
+                if dist and dist > 0 and dist < float('inf'):
+                    point = ray.origin + ray.direction * dist
+                    normal = obj.normalAt(point)
+                    color = obj.material.color
+                    for light in lightList:
+                        lightRay = light.position-point
+                        reflectedLight = (lightRay).reflect(normal)
+                        
+                        diff = normal.angle(light.position-point)
+                        normalizedDiff = math.cos(diff)
+                        normalizedDiff = normalizedDiff if normalizedDiff > 0 else 0
+
+                        spec = reflectedLight.angle(ray.direction*(-1))
+                        normalizedSpec = math.cos(spec)
+                        #normalizedSpec = normalizedSpec if normalizedSpec > 0 else 0
+                        #print normalizedSpec
+                        color = color * (normalizedDiff*0) + white * (normalizedSpec * 1)
+
+                #print color
+                #color = [255 if c > 255 else c for c in color.vec]
+                #colorValue = self.colorFromDistance(minDist)
+                #render_func(x, y, color[0], color[1], color[2])
+                render_func(x, y, color.x, color.y, color.z)
 		
     def __repr__(self):
         return 'Camera(position:%s, up:%s, f_point:%s, fieldOfView:%s, x:%s, y:%s, z:%s)' % (repr(self.position), repr(self.up), repr(self.f_point), repr(self.fieldOfView), repr(self.x), repr(self.y), repr(self.z))

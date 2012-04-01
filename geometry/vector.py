@@ -70,6 +70,28 @@ class Vector(object):
     def normalized(self):
         return self / self.length()
 
+    def inversed(self):
+        '''invertierter Vektor
+        Vector^-1 = Vector'''
+        newVec = tuple(map(lambda coord: 1.0/coord, self.vec))
+        return Vector(newVec)
+
+    def angle(self, otherVec):
+        '''Winkel zwischen zwei Vektoren'''
+        return math.acos(self.dot(otherVec) / (self.length() * otherVec.length()))
+
+    def reflect(self, mirror):
+        planeNormal = self.cross(mirror)
+        mirrorNormal = planeNormal.cross(self).normalized()
+        newDir = [coords[0]*coords[1] for coords in zip(mirrorNormal.vec, mirror.vec)]
+        #newDir = (mirrorNormal*(-1)).cross(self).cross(mirrorNormal)
+        return Vector(tuple(newDir))
+        #return newDir
+
+    def linearDecomposition(self, vec1, vec2):
+        alpha = (self.y / vec2.y - self.z / vec2.z) / (vec1.y / vec2.y - vec1.z / vec2.z)
+        beta = (self.x / vec1.x - self.y / vec1.y) / (vec2.x / vec1.x - vec2.y / vec1.y)
+        return alpha, beta
 
 if __name__ == '__main__':
 
@@ -109,5 +131,23 @@ if __name__ == '__main__':
     assert(v2.cross(v4) == vz)
     assert(v4.cross(v2) == vz)
     assert(v5.cross(v6) == Vector(7,-1,-5))
+
+    # Inverse testen
+    assert(v.inversed() == Vector(1, 0.5, 1/3.0))
+
+    # Winkel testen
+    assert(Vector(5,0,0).angle(Vector(0,3,0)) == math.pi/2)
+    assert(Vector(5,0,0).angle(Vector(3,3,0)) == math.pi/4)
+
+    # Decomposition testen
+    assert(Vector(1,1,0).linearDecomposition(Vector(1,0,0),Vector(0,1,0)) == (1,1))
+
+    # Reflexion testen
+    print Vector(1,0,0).reflect(Vector(2,2,0))
+    assert(Vector(1,0,0).reflect(Vector(2,2,0)) == Vector(0,1,0))
+    
+    reflected = v2.reflect(v)
+    print v2.angle(v), reflected.angle(v)
+    assert(math.fabs(v2.angle(v) - reflected.angle(v)) < 0.000000001)
 
     print "Alle Tests erfolgreich"
