@@ -91,7 +91,7 @@ class Camera(object):
                         normalizedSpec = math.cos(spec)
                         normalizedSpec = normalizedSpec if normalizedSpec > 0 else 0
                         #print normalizedSpec
-                        color = color * (normalizedDiff*1) + white * (normalizedSpec**5 * 1)
+                        color = color * 0.1 + color * (normalizedDiff*0.4) + white * (normalizedSpec**8 * 0.5)
 
                 #print color
                 color = [255 if c > 255 else c for c in color.vec]
