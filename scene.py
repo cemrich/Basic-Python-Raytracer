@@ -15,15 +15,16 @@ SCALE = 0.5
 WIDTH = int(400 * SCALE)
 HEIGHT = int(300 * SCALE)
 
-redMat = Material(Color(255, 0, 0))
-greenMat = Material(Color(0, 255, 0))
-blueMat = Material(Color(0, 0, 255))
+planeMat = Material(Color(128, 128, 128), 0, 0.9, 0.1, 1)
+redMat = Material(Color(255, 0, 0), 0.1, 0.8, 0.2)
+greenMat = Material(Color(0, 255, 0), 0.1, 0.8, 0.2)
+blueMat = Material(Color(0, 0, 255), 0.1, 0.8, 0.2)
 
 lightList = [Light(Point(30,30,10))]
 objectList = [Sphere(Point(2.5,3,-10), 2, redMat),
               Sphere(Point(-2.5,3,-10), 2, greenMat),
               Sphere(Point(0,7,-10), 2, blueMat),
-              Plane(Point(0,0,0), Vector(0,1,0))]
+              Plane(Point(0,0,0), Vector(0,1,0), planeMat)]
 
 def render_pix(x, y, color):
     canvas.create_line(x,HEIGHT-y,x+1,HEIGHT-(y+1),fill=color.toHexString())

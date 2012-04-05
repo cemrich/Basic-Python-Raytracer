@@ -1,13 +1,29 @@
+# -*- coding: utf-8 -*-
+
 from geometry import Vector
 
 
 class Material(object):
 
-    def __init__(self, color=None):
-        '''color als Color'''
+    def __init__(self, color=None, ambient=0, diffuse=0.8, specular=0.2, n=8):
+        '''
+        color als Color
+        ambient: Anteil an ambientem Lichts (0-1)
+        diffuse: Anteil an diffusem Lichts (0-1)
+        specular: Anteil an spekularem Lichts (0-1)
+        n: konstanter Faktor zur Beschreibung der Oberflächenbeschaffenheit 
+           (rau kleiner 32, glatt größer 32, n=float("inf") wäre ein perfekter Spiegel
+           
+        ambient + diffuse <= 1
+        '''
         self.color = color
         if not color:
             self.color = Color(128, 128, 128)
+        
+        self.ambient = ambient
+        self.diffuse = diffuse
+        self.specular = specular
+        self.n = n
 
 
 class Color(Vector):

@@ -67,7 +67,7 @@ class Camera(object):
         return (minDist, minObject)
 
     def calculateColor(self, lightList, ray, dist, obj):
-        white = Color(255,255,255)
+        ambient = Color(255,255,255)
         
         point = ray.origin + ray.direction * dist
         normal = obj.normalAt(point)
@@ -83,7 +83,10 @@ class Camera(object):
             spec = reflectedLight.angle(ray.direction*(-1))
             normalizedSpec = math.cos(spec)
             normalizedSpec = normalizedSpec if normalizedSpec > 0 else 0
-            color = color * 0.1 + color * (normalizedDiff*0.4) + white * (normalizedSpec**8 * 0.5)
+            
+            konst = (obj.material.n + 2) / (math.pi *2)
+            
+            color = ambient * obj.material.ambient + color * (normalizedDiff*obj.material.diffuse) + color * konst * (normalizedSpec**obj.material.n * obj.material.specular)
         return color.validate()
                     
     def render(self, render_func, objectList, lightList, bgColor=Color(0,0,0)):
