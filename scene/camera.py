@@ -2,18 +2,16 @@
 
 import math
 from ray import Ray
-from scene import *
-from scene.material import *
-from geometry import *
+from material import Color
 
 class Camera(object):
     def __init__(self, position, up, f_point, fieldOfView):
-	'''
-	position:    wo steht die Camera (Point)
-	up:          welche Richtung ist Oben (Vector)
-	f_point:     auf welchen Punkt schaut die Camera (Point)
-	fieldOfView: Öffnungswinkel im Bogenmaß
-	'''
+        '''
+        position:    wo steht die Camera (Point)
+	    up:          welche Richtung ist Oben (Vector)
+	    f_point:     auf welchen Punkt schaut die Camera (Point)
+	    fieldOfView: Öffnungswinkel im Bogenmaß
+	    '''
         self.position = position
         self.up = up
         self.f_point = f_point
@@ -98,6 +96,6 @@ class Camera(object):
                 if dist and dist > 0 and dist < float('inf'):
                     color = self.calculateColor(lightList, ray, dist, obj)
                 render_func(x, y, color)
-		
+    
     def __repr__(self):
         return 'Camera(position:%s, up:%s, f_point:%s, fieldOfView:%s, x:%s, y:%s, z:%s)' % (repr(self.position), repr(self.up), repr(self.f_point), repr(self.fieldOfView), repr(self.x), repr(self.y), repr(self.z))

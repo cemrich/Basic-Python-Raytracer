@@ -1,6 +1,5 @@
 import math
 from material import Material
-from geometry import Vector
 
 class Sphere(object):
     def __init__(self, center, radius, material=None):

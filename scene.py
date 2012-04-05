@@ -1,17 +1,19 @@
-from Tkinter import *
-from Canvas import *
+from Tkinter import Tk, Frame, Canvas
 
-from scene import *
-from scene.material import *
-from geometry import *
+from scene.light import Light
+from scene.material import Material, Color
+from scene.camera import Camera
+from scene.sphere import Sphere
+from scene.plane import Plane
+from geometry import Point, Vector
 
 import math
 
 
 FIELD_OF_VIEW = math.pi / 4.0 #45 Grad
-SCALE = 1
-WIDTH = 400 * SCALE
-HEIGHT = 300 * SCALE
+SCALE = 0.5
+WIDTH = int(400 * SCALE)
+HEIGHT = int(300 * SCALE)
 
 redMat = Material(Color(255, 0, 0))
 greenMat = Material(Color(0, 255, 0))

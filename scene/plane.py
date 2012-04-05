@@ -1,5 +1,4 @@
 from material import Material
-from geometry import Vector
 
 
 class Plane(object):
