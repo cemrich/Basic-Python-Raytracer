@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 
 from geometry import Vector
+import math
 
 
 class Material(object):
 
-    def __init__(self, color=None, ambient=0, diffuse=0.8, specular=0.2, n=8):
+    def __init__(self, color=None, ambient=0, diffuse=0.8, specular=0.2, glossiness=0.05):
         '''
         color als Color
         ambient: Anteil an ambientem Lichts (0-1)
         diffuse: Anteil an diffusem Lichts (0-1)
         specular: Anteil an spekularem Lichts (0-1)
-        n: konstanter Faktor zur Beschreibung der Oberflächenbeschaffenheit 
-           (rau kleiner 32, glatt größer 32, n=float("inf") wäre ein perfekter Spiegel
+        glossiness: konstanter Faktor zur Beschreibung der Oberflächenbeschaffenheit 
+                    (0 => rau, 1 => perfekter Spiegel)
            
         ambient + diffuse <= 1
         '''
@@ -23,10 +24,33 @@ class Material(object):
         self.ambient = ambient
         self.diffuse = diffuse
         self.specular = specular
-        self.n = n
+        self.n = 64 * glossiness + 1
+        self.glossiness = glossiness
+        
+    def renderColor(self, lightRay, normal, lightIntensity, rayDirection):
+        '''
+        Gibt die Farbe dieses Materials für eine bestimmte Lichtqualität zurück.
+        @param lightRay: Strahl vom zu rendernden Punkt zur Lichtquelle (Ray)
+        @param normal: Normale an der zu rendernden Stelle (Vector)
+        @param lightIntensity: Intensität der Lichtquelle (0-1)
+        @param rayDirection: Blickrichtung auf die zu rendernde Stelle (Vector)
+        @return: Farbe dieses Materials (Color)
+        '''
+        color = black
+        reflectedLight = (lightRay.direction).reflect(normal)
+        diffuseFactor = lightRay.direction.dot(normal)
+    
+        if (diffuseFactor > 0):
+            color += self.color * (diffuseFactor*self.diffuse) * lightIntensity
+            specularFactor = reflectedLight.dot(rayDirection * -1)
+            if specularFactor > 0:
+                specConst = (self.n + 2) / (math.pi *2)
+                color += white * specConst * (specularFactor**self.n * self.specular) * lightIntensity
+        return color
+
 
 class Color(Vector):
-
+    
     def __init__(self, r, g=0, b=0):
         Vector.__init__(self, r, g, b)
 
@@ -53,3 +77,6 @@ class Color(Vector):
 
     def toHexString(self):
         return '#%02X%02X%02X' % (self.r, self.g, self.b)
+
+black = Color(0, 0, 0)
+white = Color(255, 255, 255)

@@ -8,6 +8,3 @@ class Light(object):
         '''
         self.position = position
         self.intensity = intensity
-
-    def intersect(self, ray):
-        pass

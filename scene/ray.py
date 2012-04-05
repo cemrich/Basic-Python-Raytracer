@@ -9,5 +9,7 @@ class Ray(object):
     def pointAtParameter(self, t):
         return self.origin + self.direction.scale(t)
 
-    def reflect(self, point, normal):
-        return Ray(point, self.direction.mirror(normal))
+    def reflect(self, normal, newPoint=None):
+        if not newPoint:
+            newPoint = self.origin
+        return Ray(newPoint, self.direction.reflect(normal))
