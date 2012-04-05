@@ -20,7 +20,7 @@ redMat = Material(Color(255, 0, 0), 0.1, 0.8, 0.2)
 greenMat = Material(Color(0, 255, 0), 0.1, 0.8, 0.2)
 blueMat = Material(Color(0, 0, 255), 0.1, 0.8, 0.2)
 
-lightList = [Light(Point(30,30,10))]
+lightList = [Light(Point(30,30,10), 1), Light(Point(-10,4,-10), 0.1)]
 objectList = [Sphere(Point(2.5,3,-10), 2, redMat),
               Sphere(Point(-2.5,3,-10), 2, greenMat),
               Sphere(Point(0,7,-10), 2, blueMat),
