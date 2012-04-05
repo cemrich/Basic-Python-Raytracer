@@ -66,7 +66,14 @@ class Camera(object):
                 minObject = obj
         return (minDist, minObject)
 
-    def calculateColor(self, lightList, ray, dist, obj):
+    def isInShadow(self, objectList, lightRay):
+        for obj in objectList:
+            t = obj.intersectionParameter(lightRay)
+            if t > 0:
+                return t
+        return 0
+
+    def calculateColor(self, objectList, lightList, ray, dist, obj):
         white = Color(255,255,255)
         
         point = ray.origin + ray.direction * dist
@@ -75,16 +82,17 @@ class Camera(object):
         color = obj.material.color * obj.material.ambient
         
         for light in lightList:
-            lightVec = (light.position-point).normalized()
-            reflectedLight = (lightVec).reflect(normal)
-            diffuse = lightVec.dot(normal)
+            lightRay = Ray(point, light.position-point)
+            if not self.isInShadow(objectList, lightRay):
+                reflectedLight = (lightRay.direction).reflect(normal)
+                diffuse = lightRay.direction.dot(normal)
             
-            if (diffuse > 0):
-                color += objColor * (diffuse*obj.material.diffuse) * light.intensity
-                specular = reflectedLight.dot(ray.direction * -1)
-                if specular > 0:
-                    specConst = (obj.material.n + 2) / (math.pi *2)
-                    color += white * specConst * (specular**obj.material.n * obj.material.specular) * light.intensity
+                if (diffuse > 0):
+                    color += objColor * (diffuse*obj.material.diffuse) * light.intensity
+                    specular = reflectedLight.dot(ray.direction * -1)
+                    if specular > 0:
+                        specConst = (obj.material.n + 2) / (math.pi *2)
+                        color += white * specConst * (specular**obj.material.n * obj.material.specular) * light.intensity
                     
         return color.validate()
                     
@@ -96,7 +104,7 @@ class Camera(object):
                 ray = self.build_ray(x, y)
                 (dist, obj) = self.getMinDistAndObj(ray, objectList)
                 if dist and dist > 0 and dist < float('inf'):
-                    color = self.calculateColor(lightList, ray, dist, obj)
+                    color = self.calculateColor(objectList, lightList, ray, dist, obj)
                 render_func(x, y, color)
     
     def __repr__(self):
