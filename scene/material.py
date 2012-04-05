@@ -25,7 +25,6 @@ class Material(object):
         self.specular = specular
         self.n = n
 
-
 class Color(Vector):
 
     def __init__(self, r, g=0, b=0):

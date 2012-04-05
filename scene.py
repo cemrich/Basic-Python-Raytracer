@@ -15,10 +15,10 @@ SCALE = 0.5
 WIDTH = int(400 * SCALE)
 HEIGHT = int(300 * SCALE)
 
-planeMat = Material(Color(128, 128, 128), 0, 0.9, 0.1, 1)
-redMat = Material(Color(255, 0, 0), 0.1, 0.8, 0.2)
-greenMat = Material(Color(0, 255, 0), 0.1, 0.8, 0.2)
-blueMat = Material(Color(0, 0, 255), 0.1, 0.8, 0.2)
+planeMat = Material(Color(128, 128, 128), 1, 0.5, 0.5, 20)
+redMat = Material(Color(255, 0, 0), 0.3, 0.8, 0.2)
+greenMat = Material(Color(0, 255, 0), 0.3, 0.8, 0.2)
+blueMat = Material(Color(0, 0, 255), 0.3, 0.8, 0.2)
 
 lightList = [Light(Point(30,30,10), 1), Light(Point(-10,4,-10), 0.1)]
 objectList = [Sphere(Point(2.5,3,-10), 2, redMat),

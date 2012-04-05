@@ -67,26 +67,25 @@ class Camera(object):
         return (minDist, minObject)
 
     def calculateColor(self, lightList, ray, dist, obj):
-        ambient = Color(255,255,255)
+        white = Color(255,255,255)
         
         point = ray.origin + ray.direction * dist
         normal = obj.normalAt(point)
         objColor = obj.material.color
-        color = ambient * obj.material.ambient
+        color = obj.material.color * obj.material.ambient
+        
         for light in lightList:
-            lightRay = light.position-point
-            reflectedLight = (lightRay).reflect(normal)
-                        
-            diff = normal.angle(light.position-point)
-            normalizedDiff = math.cos(diff)
-            normalizedDiff = normalizedDiff if normalizedDiff > 0 else 0
-
-            spec = reflectedLight.angle(ray.direction*(-1))
-            normalizedSpec = math.cos(spec)
-            normalizedSpec = normalizedSpec if normalizedSpec > 0 else 0
+            lightVec = (light.position-point).normalized()
+            reflectedLight = (lightVec).reflect(normal)
+            diffuse = lightVec.dot(normal)
             
-            specKonst = (obj.material.n + 2) / (math.pi *2)
-            color += (objColor * (normalizedDiff*obj.material.diffuse) + objColor * specKonst * (normalizedSpec**obj.material.n * obj.material.specular)) * light.intensity
+            if (diffuse > 0):
+                color += objColor * (diffuse*obj.material.diffuse) * light.intensity
+                specular = reflectedLight.dot(ray.direction * -1)
+                if specular > 0:
+                    specConst = (obj.material.n + 2) / (math.pi *2)
+                    color += white * specConst * (specular**obj.material.n * obj.material.specular) * light.intensity
+                    
         return color.validate()
                     
     def render(self, render_func, objectList, lightList, bgColor=Color(0,0,0)):
