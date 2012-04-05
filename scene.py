@@ -9,7 +9,7 @@ import math
 
 
 FIELD_OF_VIEW = math.pi / 4.0 #45 Grad
-SCALE = 3
+SCALE = 1
 WIDTH = 400 * SCALE
 HEIGHT = 300 * SCALE
 
