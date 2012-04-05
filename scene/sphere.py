@@ -3,11 +3,13 @@ from material import Material
 from geometry import Vector
 
 class Sphere(object):
-    def __init__(self, center, radius):
+    def __init__(self, center, radius, material=None):
         self.center = center # point
         self.radius = radius # scalar
 
-        self.material = Material(Vector(0, 255, 0))
+        self.material = material
+        if not material:
+            self.material = Material()
 
         print "Kugel initialisiert:", repr(self)
 

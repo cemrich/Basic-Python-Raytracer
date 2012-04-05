@@ -4,11 +4,13 @@ from geometry import Vector
 
 class Plane(object):
 
-    def __init__(self, point, normal):
+    def __init__(self, point, normal, material=None):
         self.point = point
         self.normal = normal.normalized()
 
-        self.material = Material(Vector(255, 255, 255))
+        self.material = material
+        if not material:
+            self.material = Material()
 
     def __repr__(self):
         return "Plane(%s, %s)" % (repr(self.point), repr(self.normal))

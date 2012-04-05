@@ -3,7 +3,10 @@
 import math
 
 class Vector(object):
+    '''Basis-Vektorfunktionen im 3D-Raum'''
+    
     def __init__(self, vec, y=0, z=0):
+        '''Vector(1,2,3) oder Vector((1,2,3))'''
         if (type(vec) == tuple):
             self.vec = vec
         else:
@@ -16,32 +19,33 @@ class Vector(object):
 
     def __add__(self, otherVec):
         '''Vector + Vector'''
-        assert(type(otherVec) == Vector)
+        assert(type(otherVec) == type(self))
         newVec = tuple(map(lambda coords: coords[0]+coords[1], zip(self.vec, otherVec.vec)))
-        return Vector(newVec)
+        return type(self)(newVec)
         
     def __sub__(self, otherVec):
         '''Vector - Vector'''
-        assert(type(otherVec) == Vector)
+        assert(type(otherVec) == type(self))
         newVec = tuple(map(lambda coords: coords[0]-coords[1], zip(self.vec, otherVec.vec)))
-        return Vector(newVec)
+        return type(self)(newVec)
     
     def __div__(self, num):
         '''Vector / Scalar'''
         assert(type(num) == int or type(num) == float)
         newVec = tuple(map(lambda coord: coord/num, self.vec))
-        return Vector(newVec)
+        return type(self)(newVec)
 
     def __mul__(self, num):
         '''Vector * Scalar'''
         assert(type(num) == int or type(num) == float)
         newVec = tuple(map(lambda coord: coord*num, self.vec))
-        return Vector(newVec)
+        return type(self)(newVec)
 
     def __eq__(self, otherVec):
         return self.vec == otherVec.vec
 
     def length(self):
+        '''Länge des Vektors'''
         newVec = map(lambda coord: coord**2, self.vec)
         return math.sqrt(newVec[0] + newVec[1] + newVec[2])
 
@@ -57,40 +61,43 @@ class Vector(object):
     def cross(self, otherVec):
         '''Vektorprodukt
         Vector X Vector = Vector'''
-        assert(type(otherVec) == Vector)
+        assert(type(otherVec) == type(self))
         
         x = self.y*otherVec.z - self.z*otherVec.y
         y = self.z*otherVec.x - self.x*otherVec.z
         z = self.x*otherVec.y - self.y*otherVec.x
-        return Vector(x, y, z)
+        return type(self)(x, y, z)
 
     def scale(self, factor):
+        '''Skaliert den Vektor
+        Vector * Scalar = Vector'''
         return self * factor
         
     def normalized(self):
+        '''Normalisiert den Vektor, sodass die Länge 1 ist'''
         return self / self.length()
 
     def inversed(self):
         '''invertierter Vektor
         Vector^-1 = Vector'''
         newVec = tuple(map(lambda coord: 1.0/coord, self.vec))
-        return Vector(newVec)
+        return type(self)(newVec)
 
     def angle(self, otherVec):
         '''Winkel zwischen zwei Vektoren'''
         return math.acos(self.dot(otherVec) / (self.length() * otherVec.length()))
 
     def reflect(self, mirror):
+        '''Reflektiert diesen Vektor an 'mirror'-Vektor'''
+        # Ebene von self und mirror aufgespannt
         planeNormal = self.cross(mirror)
+        # Spiegelebene
         mirrorNormal = planeNormal.cross(mirror).normalized()
+        # Distanz zwischen self und Spiegelebene
         dist = self.cross(mirror.normalized()).length()
+        # 2 mal die Distanz * Spiegelebene-Normale draufaddieren
         newPoint = self + mirrorNormal * dist * 2
-        return newPoint
-
-    def linearDecomposition(self, vec1, vec2):
-        alpha = (self.y / vec2.y - self.z / vec2.z) / (vec1.y / vec2.y - vec1.z / vec2.z)
-        beta = (self.x / vec1.x - self.y / vec1.y) / (vec2.x / vec1.x - vec2.y / vec1.y)
-        return alpha, beta
+        return type(self)(newPoint.vec)
 
 if __name__ == '__main__':
 
@@ -137,13 +144,9 @@ if __name__ == '__main__':
     # Winkel testen
     assert(Vector(5,0,0).angle(Vector(0,3,0)) == math.pi/2)
     assert(Vector(5,0,0).angle(Vector(3,3,0)) == math.pi/4)
-
-    # Decomposition testen
-    #assert(Vector(1,1,0).linearDecomposition(Vector(1,0,0),Vector(0,1,0)) == (1,1))
-
+    
     # Reflexion testen
     assert(Vector(1,1,0).reflect(Vector(1,0,0)) == Vector(1,-1,0))
-    
     reflected = v2.reflect(v)
     assert(math.fabs(v2.angle(v) - reflected.angle(v)) < 0.000000001)
 

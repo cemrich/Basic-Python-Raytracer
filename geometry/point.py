@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
+
 import math
 from vector import Vector
 
 class Point(object):
+    '''Basis-Punktoptionen im 3D-Raum'''
+    
     def __init__(self, point, y=0, z=0):
+        '''Point(1,2,3) oder Point((1,2,3))'''
         if (type(point) == tuple):
             self.point = point
         else:
@@ -30,8 +34,15 @@ class Point(object):
 
 if __name__ == '__main__':
     
+    print "Führe Tests aus..."
+    
     p1 = Point(1,2,3)
     p2 = Point(2,2,2)
 
     # Subtraktion testen
     assert(p1-p2 == Vector(-1,0,1))
+
+    # Addition testen
+    assert(p1+Vector(1,-2,1.5) == Point(2,0,4.5))
+    
+    print "Alle Tests erfolgreich"

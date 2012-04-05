@@ -3,6 +3,7 @@
 import math
 from ray import Ray
 from scene import *
+from scene.material import *
 from geometry import *
 
 class Camera(object):
@@ -66,38 +67,37 @@ class Camera(object):
                 minDist = dist
                 minObject = obj
         return (minDist, minObject)
+
+    def calculateColor(self, lightList, ray, dist, obj):
+        white = Color(255,255,255)
+        
+        point = ray.origin + ray.direction * dist
+        normal = obj.normalAt(point)
+        color = obj.material.color
+        for light in lightList:
+            lightRay = light.position-point
+            reflectedLight = (lightRay).reflect(normal)
+                        
+            diff = normal.angle(light.position-point)
+            normalizedDiff = math.cos(diff)
+            normalizedDiff = normalizedDiff if normalizedDiff > 0 else 0
+
+            spec = reflectedLight.angle(ray.direction*(-1))
+            normalizedSpec = math.cos(spec)
+            normalizedSpec = normalizedSpec if normalizedSpec > 0 else 0
+            color = color * 0.1 + color * (normalizedDiff*0.4) + white * (normalizedSpec**8 * 0.5)
+        return color.validate()
                     
-    def render(self, render_func, objectList, lightList):
+    def render(self, render_func, objectList, lightList, bgColor=Color(0,0,0)):
         steps = 1
-        white = Vector(255,255,255)
         for y in range(0, self.height, steps):
             for x in range(0, self.width, steps):
-                color = Vector(0,0,0)
+                color = bgColor
                 ray = self.build_ray(x, y)
                 (dist, obj) = self.getMinDistAndObj(ray, objectList)
                 if dist and dist > 0 and dist < float('inf'):
-                    point = ray.origin + ray.direction * dist
-                    normal = obj.normalAt(point)
-                    color = obj.material.color
-                    for light in lightList:
-                        lightRay = light.position-point
-                        reflectedLight = (lightRay).reflect(normal)
-                        
-                        diff = normal.angle(light.position-point)
-                        normalizedDiff = math.cos(diff)
-                        normalizedDiff = normalizedDiff if normalizedDiff > 0 else 0
-
-                        spec = reflectedLight.angle(ray.direction*(-1))
-                        normalizedSpec = math.cos(spec)
-                        normalizedSpec = normalizedSpec if normalizedSpec > 0 else 0
-                        #print normalizedSpec
-                        color = color * 0.1 + color * (normalizedDiff*0.4) + white * (normalizedSpec**8 * 0.5)
-
-                #print color
-                color = [255 if c > 255 else c for c in color.vec]
-                #colorValue = self.colorFromDistance(minDist)
-                render_func(x, y, color[0], color[1], color[2])
-                #render_func(x, y, color.x, color.y, color.z)
+                    color = self.calculateColor(lightList, ray, dist, obj)
+                render_func(x, y, color)
 		
     def __repr__(self):
         return 'Camera(position:%s, up:%s, f_point:%s, fieldOfView:%s, x:%s, y:%s, z:%s)' % (repr(self.position), repr(self.up), repr(self.f_point), repr(self.fieldOfView), repr(self.x), repr(self.y), repr(self.z))
