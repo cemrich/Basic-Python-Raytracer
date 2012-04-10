@@ -1,7 +1,7 @@
 from Tkinter import Tk, Frame, Canvas
 
 from scene.light import Light
-from scene.material import Material, Color
+from scene.material import Material, CheckedMaterial, Color
 from scene.camera import Camera
 from scene.sphere import Sphere
 from scene.plane import Plane
@@ -16,7 +16,7 @@ WIDTH = int(400 * SCALE)
 HEIGHT = int(300 * SCALE)
 
 # Materialien
-planeMat = Material(Color(128, 128, 128), 1, 0.5, 0.5, 0.2)
+planeMat = CheckedMaterial()
 redMat = Material(Color(255, 0, 0), 0.3, 0.8, 0.1)
 greenMat = Material(Color(0, 255, 0), 0.3, 0.8, 0.2, 0.1)
 blueMat = Material(Color(0, 0, 255), 0.3, 0.8, 0.2, 0.1)

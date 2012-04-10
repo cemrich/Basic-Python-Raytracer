@@ -48,6 +48,19 @@ class Material(object):
                 color += white * specConst * (specularFactor**self.n * self.specular) * lightIntensity
         return color
 
+class CheckedMaterial(Material):
+    def __init__(self):
+        Material.__init__(self, None, 0.1, 0.6, 0.4)
+        
+    def renderColor(self, lightRay, normal, lightIntensity, rayDirection):
+        if (lightRay.origin.x % 4 > 2 and lightRay.origin.z % 4 > 2) or (lightRay.origin.x % 4 <= 2 and lightRay.origin.z % 4 <= 2):
+            self.color = white
+            self.glossiness = 0.3
+        else:
+            self.color = black
+            self.glossiness = 0.05
+        return Material.renderColor(self, lightRay, normal, lightIntensity, rayDirection)
+
 
 class Color(Vector):
     

@@ -11,7 +11,6 @@ class Vector(object):
             self.vec = vec
         else:
             self.vec = (vec, y, z)
-        (self.x, self.y, self.z) = self.vec
         self.vec = tuple(map(float, self.vec))
 
     def __repr__(self):
@@ -98,6 +97,18 @@ class Vector(object):
         # 2 mal die Distanz * Spiegelebene-Normale draufaddieren
         newPoint = self + mirrorNormal * dist * 2
         return type(self)(newPoint.vec)
+
+    @property
+    def x(self):
+        return self.vec[0]
+    
+    @property
+    def y(self):
+        return self.vec[1]
+    
+    @property
+    def z(self):
+        return self.vec[2]
 
 if __name__ == '__main__':
 

@@ -32,6 +32,18 @@ class Point(object):
         newPoint = tuple(map(lambda coords: coords[0]+coords[1], zip(self.point, vector.vec)))
         return Point(newPoint)
 
+    @property
+    def x(self):
+        return self.point[0]
+    
+    @property
+    def y(self):
+        return self.point[1]
+    
+    @property
+    def z(self):
+        return self.point[2]
+
 if __name__ == '__main__':
     
     print "Führe Tests aus..."
