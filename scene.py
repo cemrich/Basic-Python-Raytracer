@@ -17,9 +17,9 @@ HEIGHT = int(240 * SCALE)
 
 # Materialien
 planeMat = CheckedMaterial()
-redMat = Material(Color(255, 0, 0), 0.3, 0.8, 0.1)
-greenMat = Material(Color(0, 255, 0), 0.3, 0.8, 0.2, 0.1)
-blueMat = Material(Color(0, 0, 255), 0.3, 0.8, 0.2, 0.1)
+redMat = Material(Color(1, 0, 0), 0.3, 0.8, 0.1)
+greenMat = Material(Color(0, 1, 0), 0.3, 0.8, 0.2, 0.1)
+blueMat = Material(Color(0, 0, 1), 0.3, 0.8, 0.2, 0.1)
 
 # Szenen-Objekte
 lightList = [Light(Point(30,30,10), 1)]

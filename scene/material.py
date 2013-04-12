@@ -19,7 +19,7 @@ class Material(object):
         '''
         self.color = color
         if not color:
-            self.color = Color(128, 128, 128)
+            self.color = Color(0.5, 0.5, 0.5)
         
         self.ambient = ambient
         self.diffuse = diffuse
@@ -63,12 +63,17 @@ class CheckedMaterial(Material):
 
 
 class Color(Vector):
-    
+    '''
+	Farbe als dreidimensionaler Vektor, der die Rot-, Grün
+	und Blau-Werte abbildet. Alle Werte sind zwischen 0 und
+	1 normalisiert.
+	'''
+	
     def __init__(self, r, g=0, b=0):
         Vector.__init__(self, r, g, b)
 
     def validate(self):
-        return Color(tuple([255 if c > 255 else c for c in self.vec]))
+        return Color(tuple([1 if c > 1 else c for c in self.vec]))
 
     def __mul__(self, other):
         return super(Color, self).__mul__(other)
@@ -89,7 +94,7 @@ class Color(Vector):
         return self.z
 
     def toHexString(self):
-        return '#%02X%02X%02X' % (self.r, self.g, self.b)
+        return '#%02X%02X%02X' % (self.r * 255, self.g * 255, self.b * 255)
 
 black = Color(0, 0, 0)
-white = Color(255, 255, 255)
+white = Color(1, 1, 1)
