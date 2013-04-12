@@ -5,6 +5,7 @@ from scene.material import Material, CheckedMaterial, Color
 from scene.camera import Camera
 from scene.sphere import Sphere
 from scene.plane import Plane
+from scene.triangle import Triangle
 from geometry import Point, Vector
 
 import math
@@ -20,12 +21,14 @@ planeMat = CheckedMaterial()
 redMat = Material(Color(1, 0, 0), 0.3, 0.8, 0.1)
 greenMat = Material(Color(0, 1, 0), 0.3, 0.8, 0.2, 0.1)
 blueMat = Material(Color(0, 0, 1), 0.3, 0.8, 0.2, 0.1)
+triangleMat = Material(Color(1, 1, 0), 0.3, 0.8, 0.1, 0)
 
 # Szenen-Objekte
 lightList = [Light(Point(30,30,10), 1)]
 objectList = [Sphere(Point(2.5,3,-10), 2, redMat),
               Sphere(Point(-2.5,3,-10), 2, greenMat),
               Sphere(Point(0,7,-10), 2, blueMat),
+              Triangle(Point(2.5,3,-10), Point(-2.5,3,-10), Point(0,7,-10), triangleMat),
               Plane(Point(0,0,0), Vector(0,1,0), planeMat)]
 
 # Renderfunktion - wird pro Pixel aufgerufen
