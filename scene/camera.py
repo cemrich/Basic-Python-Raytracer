@@ -83,7 +83,9 @@ class Camera(object):
         '''
         for obj in objectList:
             t = obj.intersectionParameter(lightRay)
-            return t if t > 0 else 0
+            if t > 0:
+                return t
+        return 0
 
     def calculateColor(self, objectList, lightList, rayDir, point, obj):
         '''
