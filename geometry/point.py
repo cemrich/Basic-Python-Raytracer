@@ -12,7 +12,7 @@ class Point(object):
             self.point = point
         else:
             self.point = (point, y, z)
-        self.point = tuple(map(float, self.point))
+        #self.point = (float(self.point[0]), float(self.point[1]), float(self.point[2]))
 
     def __repr__(self):
         return 'Point(%s, %s, %s)' % (repr(self.point[0]), repr(self.point[1]), repr(self.point[2]))
@@ -22,14 +22,18 @@ class Point(object):
 
     def __sub__(self, otherPoint):
         '''Point - Point = Vector'''
-        assert(type(otherPoint) == Point)
-        newVec = tuple(map(lambda coords: coords[0]-coords[1], zip(self.point, otherPoint.point)))
+        #assert(type(otherPoint) == Point)
+        newVec = (self.point[0]-otherPoint.point[0], \
+                  self.point[1]-otherPoint.point[1], \
+                  self.point[2]-otherPoint.point[2])
         return Vector(newVec)
 
     def __add__(self, vector):
         '''Point + Vector = Point'''
-        assert(type(vector) == Vector)
-        newPoint = tuple(map(lambda coords: coords[0]+coords[1], zip(self.point, vector.vec)))
+        #assert(type(vector) == Vector)
+        newPoint = (self.point[0]+vector.vec[0], \
+                  self.point[1]+vector.vec[1], \
+                  self.point[2]+vector.vec[2])
         return Point(newPoint)
 
     @property

@@ -11,33 +11,41 @@ class Vector(object):
             self.vec = vec
         else:
             self.vec = (vec, y, z)
-        self.vec = tuple(map(float, self.vec))
-
+        #self.vec = (float(self.vec[0]), float(self.vec[1]), float(self.vec[2]))
+        
     def __repr__(self):
         return 'Vector(%s, %s, %s)' % (repr(self.x), repr(self.y), repr(self.z))
 
     def __add__(self, otherVec):
         '''Vector + Vector'''
-        assert(type(otherVec) == type(self))
-        newVec = tuple(map(lambda coords: coords[0]+coords[1], zip(self.vec, otherVec.vec)))
+        #assert(type(otherVec) == type(self))
+        newVec = (self.vec[0]+otherVec.vec[0], \
+                  self.vec[1]+otherVec.vec[1], \
+                  self.vec[2]+otherVec.vec[2])
         return type(self)(newVec)
         
     def __sub__(self, otherVec):
         '''Vector - Vector'''
-        assert(type(otherVec) == type(self))
-        newVec = tuple(map(lambda coords: coords[0]-coords[1], zip(self.vec, otherVec.vec)))
+        #assert(type(otherVec) == type(self))
+        newVec = (self.vec[0]-otherVec.vec[0], \
+                  self.vec[1]-otherVec.vec[1], \
+                  self.vec[2]-otherVec.vec[2])
         return type(self)(newVec)
     
     def __div__(self, num):
         '''Vector / Scalar'''
-        assert(type(num) == int or type(num) == float)
-        newVec = tuple(map(lambda coord: coord/num, self.vec))
+        #assert(type(num) == int or type(num) == float)
+        newVec = (self.vec[0] / num, \
+                  self.vec[1] / num, \
+                  self.vec[2] / num)
         return type(self)(newVec)
 
     def __mul__(self, num):
         '''Vector * Scalar'''
-        assert(type(num) == int or type(num) == float)
-        newVec = tuple(map(lambda coord: coord*num, self.vec))
+        #assert(type(num) == int or type(num) == float)
+        newVec = (self.vec[0] * num, \
+                  self.vec[1] * num, \
+                  self.vec[2] * num)
         return type(self)(newVec)
 
     def __eq__(self, otherVec):
@@ -45,26 +53,25 @@ class Vector(object):
 
     def length(self):
         '''Länge des Vektors'''
-        newVec = map(lambda coord: coord**2, self.vec)
-        return math.sqrt(newVec[0] + newVec[1] + newVec[2])
+        return math.sqrt(self.vec[0]**2 + self.vec[1]**2 + self.vec[2]**2)
 
     def dot(self, otherVec):
         '''Skalarprodukt
         <Vector,Vector> = Scalar'''
-        assert(type(otherVec) == Vector)
+        #assert(type(otherVec) == Vector)
         
-        # Elemente multiplizieren
-        newVec = tuple(map(lambda coords: coords[0]*coords[1], zip(self.vec, otherVec.vec)))
-        return newVec[0] + newVec[1] + newVec[2]
+        return self.vec[0]*otherVec.vec[0] + \
+            self.vec[1]*otherVec.vec[1] + \
+            self.vec[2]*otherVec.vec[2]
 
     def cross(self, otherVec):
         '''Vektorprodukt
         Vector X Vector = Vector'''
-        assert(type(otherVec) == type(self))
+        #assert(type(otherVec) == type(self))
         
-        x = self.y*otherVec.z - self.z*otherVec.y
-        y = self.z*otherVec.x - self.x*otherVec.z
-        z = self.x*otherVec.y - self.y*otherVec.x
+        x = self.vec[1]*otherVec.vec[2] - self.vec[2]*otherVec.vec[1]
+        y = self.vec[2]*otherVec.vec[0] - self.vec[0]*otherVec.vec[2]
+        z = self.vec[0]*otherVec.vec[1] - self.vec[1]*otherVec.vec[0]
         return type(self)(x, y, z)
 
     def scale(self, factor):
@@ -79,8 +86,7 @@ class Vector(object):
     def inversed(self):
         '''invertierter Vektor
         Vector^-1 = Vector'''
-        newVec = tuple(map(lambda coord: 1.0/coord, self.vec))
-        return type(self)(newVec)
+        return type(self)(1/self.vec[0], 1/self.vec[1], 1/self.vec[2])
 
     def angle(self, otherVec):
         '''Winkel zwischen zwei Vektoren'''
@@ -115,12 +121,12 @@ if __name__ == '__main__':
     print "Führe Tests aus..."
 
     vz = Vector(0,0,0)
-    v = Vector(1,2,3)
-    v2 = Vector(2,2,2)
-    v3 = Vector(4,3,0)
-    v4 = Vector(1,1,1)
-    v5 = Vector(1,2,1)
-    v6 = Vector(2,-1,3)
+    v = Vector(1.,2.,3.)
+    v2 = Vector(2.,2.,2.)
+    v3 = Vector(4.,3.,0)
+    v4 = Vector(1.,1.,1.)
+    v5 = Vector(1.,2.,1.)
+    v6 = Vector(2.,-1.,3.)
     
     # Addition testen
     assert(v+v2 == Vector(3, 4, 5))

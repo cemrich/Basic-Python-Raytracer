@@ -1,4 +1,4 @@
-from Tkinter import Tk, Frame, Canvas
+from Tkinter import Tk, Frame, Canvas, PhotoImage
 
 from scene.light import Light
 from scene.material import Material, CheckedMaterial, Color
@@ -33,22 +33,26 @@ objectList = [Sphere(Point(2.5,3,-10), 2, redMat),
 
 # Renderfunktion - wird pro Pixel aufgerufen
 def render_pix(x, y, color):
-    canvas.create_line(x,HEIGHT-y,x+1,HEIGHT-(y+1),fill=color.toHexString())
+    img.put(color.toValidatedHexString(), (x, HEIGHT-y))
 
 
 mw = Tk()
 mw._root().wm_title("Raytracing")
 
-# create and position canvas and buttons
+# create and position canvas
 cFrame = Frame(mw, width=WIDTH, height=HEIGHT)
 cFrame.pack()
 canvas = Canvas(cFrame, width=WIDTH, height=HEIGHT, bg="white")
 canvas.pack()
+img = PhotoImage(width=WIDTH, height=HEIGHT)
 
 # camera initialisieren
 camera = Camera(Point(0,2,10), Vector(0,1,0), Point(0,3,0), FIELD_OF_VIEW)
 camera.setScreenSize(WIDTH, HEIGHT)
 camera.render(render_pix, objectList, lightList)
+
+# draw finished image
+canvas.create_image((WIDTH/2, HEIGHT/2), image=img, state="normal")
 
 # start
 mw.mainloop()

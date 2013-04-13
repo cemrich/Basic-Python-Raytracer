@@ -8,10 +8,12 @@ class Camera(object):
     def __init__(self, position, up, f_point, fieldOfView):
         '''
         @param position:    wo steht die Camera (Point)
-	    @param up:          welche Richtung ist Oben (Vector)
-	    @param f_point:     auf welchen Punkt schaut die Camera (Point)
-	    @param fieldOfView: Öffnungswinkel im Bogenmaß
-	    '''
+        @param up:          welche Richtung ist Oben (Vector)
+        @param f_point:     auf welchen Punkt schaut die Camera (Point)
+        @param fieldOfView: Öffnungswinkel im Bogenmaß
+        '''
+        self.inf = float('inf')
+      
         self.position = position
         self.up = up
         self.f_point = f_point
@@ -34,22 +36,26 @@ class Camera(object):
         ratio = width / float(height)
         alpha = self.fieldOfView / 2.0
         print "alpha:", alpha
-        self.sceneHeight = 2 * math.tan(alpha)
-        print "sceneHeight:", self.sceneHeight
-        self.sceneWidth = ratio * self.sceneHeight
-        print "sceneWidth:", self.sceneWidth
-        self.pixelWidth = self.sceneWidth / (width-1)
+        self.halfSceneHeight = math.tan(alpha)
+        print "halfSceneHeight:", self.halfSceneHeight
+        self.halfSceneWidth = ratio * self.halfSceneHeight
+        print "halfSceneWidth:", self.halfSceneWidth
+        self.pixelWidth = self.halfSceneWidth / (width-1) * 2
         print "pixelWidth:", self.pixelWidth
-        self.pixelHeight = self.sceneHeight / (height-1)
+        self.pixelHeight = self.halfSceneHeight / (height-1) * 2
         print "pixelHeight:", self.pixelHeight
+        self.pixelWidthVec = self.x * self.pixelWidth    #caching for better performance in build_ray
+        self.pixelHeightVec = self.y * self.pixelHeight  #caching for better performance in build_raypixelWidth    #caching for better performance in build_ray
+        self.halfSceneWidthVec = self.x * self.halfSceneWidth    #caching for better performance in build_ray
+        self.halfSceneHeightVec = self.y * self.halfSceneHeight  #caching for better performance in build_ray
 
     def build_ray(self, x, y):
         '''
         Gibt einen Strahl zurück, der von der Kamera durch die 
         angegebene x/y-Pixel-Koordinate geht.
         '''
-        xComp = self.x * (x*self.pixelWidth - self.sceneWidth/2.0)
-        yComp = self.y * (y*self.pixelHeight - self.sceneHeight/2.0)
+        xComp = self.pixelWidthVec * x - self.halfSceneWidthVec
+        yComp = self.pixelHeightVec * y - self.halfSceneHeightVec
         return Ray(self.position, self.z + xComp + yComp)
 
     def getMinDistAndObj(self, ray, objectList):
@@ -59,7 +65,7 @@ class Camera(object):
         @param objectList: Liste aller Objekte in der Szene
         @return: Tupel aus Distanz und nächstem Objekt
         '''
-        minDist = float('inf')
+        minDist = self.inf
         minObject = None
         for obj in objectList:
             dist = obj.intersectionParameter(ray)
@@ -77,9 +83,7 @@ class Camera(object):
         '''
         for obj in objectList:
             t = obj.intersectionParameter(lightRay)
-            if t > 0:
-                return t
-        return 0
+            return t if t > 0 else 0
 
     def calculateColor(self, objectList, lightList, rayDir, point, obj):
         '''
@@ -92,7 +96,7 @@ class Camera(object):
         @return: Objektfarbe ohne Reflexionen (Color)
         '''
         normal = obj.normalAt(point)
-        color = obj.material.color * obj.material.ambient
+        color = obj.material.ambientColor
         
         for light in lightList:
             lightRay = Ray(point, light.position-point)
@@ -113,16 +117,17 @@ class Camera(object):
         '''
         (dist, obj) = self.getMinDistAndObj(ray, objectList)
         
-        if dist and dist > 0 and dist < float('inf'):
+        if dist > 0 and dist < self.inf:
             point = ray.origin + ray.direction * dist
-            normal = obj.normalAt(point)
+            color = self.calculateColor(objectList, lightList, ray.direction, point, obj)
+            
             if level == 0:
-                return self.calculateColor(objectList, lightList, ray.direction, point, obj)
-            else:
-                color = self.calculateColor(objectList, lightList, ray.direction, point, obj)
-                reflectedRay = Ray(point, ray.direction.reflect(normal)*-1)
-                reflectedColor = self.renderRay(objectList, lightList, reflectedRay, bgColor, level-1)
-                return (color*(1-obj.material.glossiness) + reflectedColor * obj.material.glossiness).validate()
+                return color
+              
+            normal = obj.normalAt(point)
+            reflectedRay = Ray(point, ray.direction.reflect(normal)*-1)
+            reflectedColor = self.renderRay(objectList, lightList, reflectedRay, bgColor, level-1)
+            return color*(1-obj.material.glossiness) + reflectedColor * obj.material.glossiness
         else:
             return bgColor
        

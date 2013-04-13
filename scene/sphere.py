@@ -5,6 +5,7 @@ class Sphere(object):
     def __init__(self, center, radius, material=None):
         self.center = center # point
         self.radius = radius # scalar
+        self.radiusSquared = radius ** 2 # caching for performance
 
         self.material = material
         if not material:
@@ -18,7 +19,7 @@ class Sphere(object):
     def intersectionParameter(self, ray):
         co = self.center - ray.origin
         v = co.dot(ray.direction)
-        discriminant = v**2 - co.dot(co) + self.radius**2
+        discriminant = v**2 - co.dot(co) + self.radiusSquared
         if discriminant < 0:
             return None
         else:
