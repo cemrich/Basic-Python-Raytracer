@@ -19,6 +19,7 @@ class Material(object):
         '''
         self.color = color if color else Color(0.5, 0.5, 0.5)
         
+        self.ambient = ambient
         self.ambientColor = self.color * ambient
         self.diffuse = diffuse
         self.diffuse = diffuse
@@ -27,7 +28,10 @@ class Material(object):
         self.specConst = (self.n + 2) / (math.pi *2)
         self.baseLight = white * self.specConst # caching for performance
         self.glossiness = glossiness
-        
+    
+    def baseColorAt(self, point):
+        return self.ambientColor
+    
     def renderColor(self, lightRay, normal, lightIntensity, rayDirection):
         '''
         Gibt die Farbe dieses Materials für eine bestimmte Lichtqualität zurück.
@@ -51,6 +55,16 @@ class Material(object):
 class CheckedMaterial(Material):
     def __init__(self):
         Material.__init__(self, None, 0.1, 0.6, 0.4)
+        self.whiteBaseColor = white * self.ambient
+        self.blackBaseColor = black * self.ambient
+        
+    def baseColorAt(self, point):
+        xMod = point.x % 4
+        zMod = point.z % 4
+        if (xMod > 2 and zMod > 2) or (xMod <= 2 and zMod <= 2):
+            return self.whiteBaseColor
+        else:
+            return self.blackBaseColor
         
     def renderColor(self, lightRay, normal, lightIntensity, rayDirection):
         xMod = lightRay.origin.x % 4

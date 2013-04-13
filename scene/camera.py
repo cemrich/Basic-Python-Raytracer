@@ -87,7 +87,7 @@ class Camera(object):
                 return t
         return 0
 
-    def calculateColor(self, objectList, lightList, rayDir, point, obj):
+    def calculateColor(self, objectList, lightList, rayDir, point, obj, normal):
         '''
         Gibt die Objektfarbe an der entsprechenden Stelle zurück (ohne Reflexionen).
         @param objectList: Liste aller Objekte in der Szene
@@ -95,10 +95,10 @@ class Camera(object):
         @param rayDir: Richtung des Sichtstrahls auf die Stelle (Vector)
         @param point: Punkt in der Szene, der berechnet werden soll
         @param object: Objekt an der zu berechnenden Stelle
+        @param normal: Normale des Objektes an der zu berechnenden Stelle
         @return: Objektfarbe ohne Reflexionen (Color)
         '''
-        normal = obj.normalAt(point)
-        color = obj.material.ambientColor
+        color = obj.material.baseColorAt(point)
         
         for light in lightList:
             lightRay = Ray(point, light.position-point)
@@ -121,12 +121,12 @@ class Camera(object):
         
         if dist > 0 and dist < self.inf:
             point = ray.origin + ray.direction * dist
-            color = self.calculateColor(objectList, lightList, ray.direction, point, obj)
+            normal = obj.normalAt(point)
+            color = self.calculateColor(objectList, lightList, ray.direction, point, obj, normal)
             
             if level == 0:
                 return color
               
-            normal = obj.normalAt(point)
             reflectedRay = Ray(point, ray.direction.reflect(normal)*-1)
             reflectedColor = self.renderRay(objectList, lightList, reflectedRay, bgColor, level-1)
             return color*(1-obj.material.glossiness) + reflectedColor * obj.material.glossiness
@@ -143,6 +143,8 @@ class Camera(object):
         @param level: Anzahl der Renderlevel (0 => keine Reflexionen, 1 => ein Level von Reflexionen)
         '''
         for y in range(self.height+1):
+            if y % 10 == 0:
+                print('.'),
             for x in range(self.width+1):
                 ray = self.build_ray(x, y)
                 color = self.renderRay(objectList, lightList, ray, bgColor, level)
