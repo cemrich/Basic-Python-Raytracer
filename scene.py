@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from Tkinter import Tk, Frame, Canvas, PhotoImage
 
 from scene.light import Light
