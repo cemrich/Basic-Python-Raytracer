@@ -17,13 +17,13 @@ FIELD_OF_VIEW = math.pi / 4.0 #45 Grad
 SCALE = 1 #zum Schnellen Vergrößern/Verkleinern
 WIDTH = int(320 * SCALE)
 HEIGHT = int(240 * SCALE)
-RENDER_LEVEL = 3
+RENDER_LEVEL = 2
 
 # Materialien
 planeMat = CheckedMaterial(0.2)
-redMat = Material(Color(1, 0, 0))
-greenMat = Material(Color(0, 1, 0))
-blueMat = Material(Color(0, 0, 1))
+redMat = Material(Color(0.8, 0, 0))
+greenMat = Material(Color(0, 0.8, 0))
+blueMat = Material(Color(0, 0, 0.8))
 triangleMat = Material(Color(1, 1, 0))
 
 # Szenen-Objekte
