@@ -70,17 +70,19 @@ class Camera(object):
                 minObject = obj
         return (minDist, minObject)
 
-    def isInShadow(self, objectList, lightRay):
+    def isInShadow(self, objectList, lightRay, ignoredObject=None):
         '''
         Berechnet, ob der Strahl von Objekten geschnitten wird.
         @param objectList: Liste aller Objekte in der Szene
         @param lightRay: Strahl von einem Objekt zu einer Lichtquelle
+        @param ignoredObjects: Objekt, das keinen Schatten verursachen soll
         @return: 0 wenn die Lichtquelle vom Objekt aus sichtbar ist, > 0 sonst
         '''
         for obj in objectList:
-            t = obj.intersectionParameter(lightRay)
-            if t > 0.0001:
-                return t
+            if obj != ignoredObject:
+                t = obj.intersectionParameter(lightRay)
+                if t > 0:
+                    return t
         return 0
 
     def calculateColor(self, objectList, lightList, rayDir, point, obj, normal):
@@ -98,7 +100,7 @@ class Camera(object):
         
         for light in lightList:
             lightRay = Ray(point, light.position-point)
-            if not self.isInShadow(objectList, lightRay):
+            if not self.isInShadow(objectList, lightRay, [obj]):
                 color += obj.material.renderColor(lightRay, normal, light.color, rayDir)
         
         return color
@@ -115,7 +117,7 @@ class Camera(object):
         '''
         (dist, obj) = self.getMinDistAndObj(ray, objectList)
         
-        if dist > 0.0001 and dist < self.inf:
+        if dist > 0.001 and dist < self.inf:
             point = ray.origin + ray.direction * dist
             normal = obj.normalAt(point)
             color = self.calculateColor(objectList, lightList, ray.direction, point, obj, normal)

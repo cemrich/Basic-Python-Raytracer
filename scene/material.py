@@ -56,9 +56,9 @@ class CheckedMaterial(object):
     Hübsches Schachbrettmuster als Materiel. Funtioniert nur in der xz-Ebene.
     '''
     
-    def __init__(self):
-        self.whiteMat = Material(Color(0.5, 0.5, 1), WHITE, glossiness=0.3)
-        self.blackMat = Material(BLACK, Color(0, 0, 0.1), WHITE, glossiness=0.05)
+    def __init__(self, glossiness=0.5):
+        self.whiteMat = Material(Color(0.5, 0.5, 1), WHITE, glossiness=glossiness)
+        self.blackMat = Material(BLACK, Color(0, 0, 0.1), WHITE, glossiness=glossiness)
         self.currMat = self.whiteMat
         
     def baseColorAt(self, point):
