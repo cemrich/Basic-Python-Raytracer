@@ -14,9 +14,10 @@ import math
 
 # Konstanten definieren
 FIELD_OF_VIEW = math.pi / 4.0 #45 Grad
-SCALE = 1 #zum Schnellen Vergrößern/Verkleinern
+SCALE = 2 #zum Schnellen Vergrößern/Verkleinern
 WIDTH = int(320 * SCALE)
 HEIGHT = int(240 * SCALE)
+RENDER_LEVEL = 2
 
 # Materialien
 planeMat = CheckedMaterial()
@@ -45,7 +46,7 @@ mw._root().wm_title("Raytracer")
 
 cFrame = Frame(mw, width=WIDTH, height=HEIGHT)
 cFrame.pack()
-canvas = Canvas(cFrame, width=WIDTH, height=HEIGHT, bg="black")
+canvas = Canvas(cFrame, width=WIDTH, height=HEIGHT, bg="white")
 canvas.pack()
 
 # Bild für Pixelunterstützung
@@ -58,7 +59,7 @@ camera.setScreenSize(WIDTH, HEIGHT)
 
 # Anfangen zu rendern, nachdem Canvas sichtbar ist
 mw.wait_visibility()
-camera.render(render_pix, objectList, lightList)
+camera.render(render_pix, objectList, lightList, level=RENDER_LEVEL)
 
 # start
 mw.mainloop()
