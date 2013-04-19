@@ -143,8 +143,6 @@ class Camera(object):
         @param level: Anzahl der Renderlevel (0 => keine Reflexionen, 1 => ein Level von Reflexionen)
         '''
         for y in range(self.height+1):
-            if y % 10 == 0:
-                print('.'),
             for x in range(self.width+1):
                 ray = self.build_ray(x, y)
                 color = self.renderRay(objectList, lightList, ray, bgColor, level)
