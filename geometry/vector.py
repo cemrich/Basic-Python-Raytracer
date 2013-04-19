@@ -39,13 +39,29 @@ class Vector(object):
                   self.vec[1] / num, \
                   self.vec[2] / num)
         return type(self)(newVec)
+    
+    def __neg__(self):
+        '-Vector = vector * -1'
+        newVec = (-self.vec[0], \
+                  -self.vec[1], \
+                  -self.vec[2])
+        return type(self)(newVec)
 
     def __mul__(self, num):
-        '''Vector * Scalar'''
+        '''Vector * Scalar oder Vector * Vector komponentenweise'''
         #assert(type(num) == int or type(num) == float)
-        newVec = (self.vec[0] * num, \
-                  self.vec[1] * num, \
-                  self.vec[2] * num)
+        
+        if type(num) == type(self):
+            # Vector * Vector komponentenweise
+            newVec = (self.vec[0] * num.vec[0], \
+                      self.vec[1] * num.vec[1], \
+                      self.vec[2] * num.vec[2])
+        else:
+            # Vector * Scalar
+            newVec = (self.vec[0] * num, \
+                      self.vec[1] * num, \
+                      self.vec[2] * num)
+            
         return type(self)(newVec)
 
     def __eq__(self, otherVec):

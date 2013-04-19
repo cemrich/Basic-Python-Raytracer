@@ -14,19 +14,19 @@ import math
 
 # Konstanten definieren
 FIELD_OF_VIEW = math.pi / 4.0 #45 Grad
-SCALE = 1 #zum Schnellen Vergrößern/Verkleinern
+SCALE = 1 #zum Schnellen VergrÃ¶ÃŸern/Verkleinern
 WIDTH = int(320 * SCALE)
 HEIGHT = int(240 * SCALE)
 
 # Materialien
 planeMat = CheckedMaterial()
-redMat = Material(Color(1, 0, 0), 0.3, 0.8, 0.1)
-greenMat = Material(Color(0, 1, 0), 0.3, 0.8, 0.2, 0.1)
-blueMat = Material(Color(0, 0, 1), 0.3, 0.8, 0.2, 0.1)
-triangleMat = Material(Color(1, 1, 0), 0.3, 0.8, 0.1, 0)
+redMat = Material(Color(1, 0, 0))
+greenMat = Material(Color(0, 1, 0))
+blueMat = Material(Color(0, 0, 1))
+triangleMat = Material(Color(1, 1, 0))
 
 # Szenen-Objekte
-lightList = [Light(Point(30,30,10), 1)]
+lightList = [Light(Point(30,30,10), Color(1, 1, 1))]
 objectList = [Sphere(Point(2.5,3,-10), 2, redMat),
               Sphere(Point(-2.5,3,-10), 2, greenMat),
               Sphere(Point(0,7,-10), 2, blueMat),

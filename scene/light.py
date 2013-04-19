@@ -1,10 +1,13 @@
+# -*- coding: utf-8 -*-
+
+from material import WHITE
 
 class Light(object):
 
-    def __init__(self, position, intensity=1):
+    def __init__(self, position, color=WHITE):
         '''
         position: position der Lichtquelle (Point)
-        intensity: wie intensiv ist die Lichtquelle (0-1)
+        color: Farbe des Lichtes (default weiß)
         '''
         self.position = position
-        self.intensity = intensity
+        self.color = color

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import math
 from vector import Vector
 
 class Point(object):

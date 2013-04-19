@@ -83,7 +83,7 @@ class Camera(object):
         '''
         for obj in objectList:
             t = obj.intersectionParameter(lightRay)
-            if t > 0:
+            if t > 0.0001:
                 return t
         return 0
 
@@ -103,7 +103,7 @@ class Camera(object):
         for light in lightList:
             lightRay = Ray(point, light.position-point)
             if not self.isInShadow(objectList, lightRay):
-                color += obj.material.renderColor(lightRay, normal, light.intensity, rayDir)
+                color += obj.material.renderColor(lightRay, normal, light.color, rayDir)
         
         return color
     
@@ -119,7 +119,7 @@ class Camera(object):
         '''
         (dist, obj) = self.getMinDistAndObj(ray, objectList)
         
-        if dist > 0 and dist < self.inf:
+        if dist > 0.0001 and dist < self.inf:
             point = ray.origin + ray.direction * dist
             normal = obj.normalAt(point)
             color = self.calculateColor(objectList, lightList, ray.direction, point, obj, normal)
@@ -129,11 +129,11 @@ class Camera(object):
               
             reflectedRay = Ray(point, ray.direction.reflect(normal)*-1)
             reflectedColor = self.renderRay(objectList, lightList, reflectedRay, bgColor, level-1)
-            return color*(1-obj.material.glossiness) + reflectedColor * obj.material.glossiness
+            return color + reflectedColor * obj.material.glossiness
         else:
             return bgColor
        
-    def render(self, render_func, objectList, lightList, bgColor=material.black, level=1):
+    def render(self, render_func, objectList, lightList, bgColor=material.BLACK, level=1):
         '''
         Rendert das aktuelle Kamerabild pixelweise.
         @param render_func: Funktion, die zum Tatsächlichen render aufgerufen wird: render_func(x, y, color)
