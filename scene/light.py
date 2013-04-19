@@ -3,11 +3,14 @@
 from material import WHITE
 
 class Light(object):
+    '''
+    Einfache Punktlichtquelle mit optional farbigem Licht.
+    '''
 
     def __init__(self, position, color=WHITE):
         '''
-        position: position der Lichtquelle (Point)
-        color: Farbe des Lichtes (default weiß)
+        @param position:  Position der Lichtquelle (Point)
+        @param color:     Farbe des Lichtes (default weiß)
         '''
         self.position = position
         self.color = color

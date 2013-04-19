@@ -11,7 +11,7 @@ class Vector(object):
             self.vec = vec
         else:
             self.vec = (vec, y, z)
-        #self.vec = (float(self.vec[0]), float(self.vec[1]), float(self.vec[2]))
+        self.vec = (float(self.vec[0]), float(self.vec[1]), float(self.vec[2]))
         
     def __repr__(self):
         return 'Vector(%s, %s, %s)' % (repr(self.x), repr(self.y), repr(self.z))
@@ -49,7 +49,6 @@ class Vector(object):
 
     def __mul__(self, num):
         '''Vector * Scalar oder Vector * Vector komponentenweise'''
-        #assert(type(num) == int or type(num) == float)
         
         if type(num) == type(self):
             # Vector * Vector komponentenweise

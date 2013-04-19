@@ -4,13 +4,16 @@ from geometry import Vector
 import math
 
 class Material(object):
+    '''
+    Oberflächenmaterial für Objekte im Raum.
+    '''
 
     def __init__(self, ambientColor=None, diffuseColor=None, specularColor=None, glossiness=0.1):
         '''
-        ambientColor:  Basis-Farbe (auch im Schatten); default = grau
-        diffuseColor:  Farbe für den diffusen Anteil (abhängig von Lichtquelle); default = ambientColor
-        specularColor: Farbe für die Highlights; default = weiß * glossiness
-        glossiness:    Spiegeleigenschaft; 0 = matt, 1 = perfekter Spiegel; default = 0.1
+        @param ambientColor:  Basis-Farbe (auch im Schatten); default = grau
+        @param diffuseColor:  Farbe für den diffusen Anteil (abhängig von Lichtquelle); default = ambientColor
+        @param specularColor: Farbe für die Highlights; default = weiß * glossiness
+        @param glossiness:    Spiegeleigenschaft; 0 = matt, 1 = perfekter Spiegel; default = 0.1
         '''
         
         # Default-Farben setzen, wenn nicht übergeben
@@ -19,10 +22,11 @@ class Material(object):
         self.specularColor = specularColor if specularColor else Color(glossiness, glossiness, glossiness)
         
         self.glossiness = glossiness
-        self.n = 64 * glossiness + 1                        # < 32 = rau, > 32 = glatt, unedlich = perfekter Spiegel 
-        self.specConst = (self.n + 2) / (math.pi * 2)       # Normalisierungsfaktor (siehe http://de.wikipedia.org/wiki/Phong-Beleuchtungsmodell)
+        self.n = 64 * glossiness + 1                    # < 32 = rau, > 32 = glatt, unedlich = perfekter Spiegel 
+        self.specConst = (self.n + 2) / (math.pi * 2)   # Normalisierungsfaktor (siehe http://de.wikipedia.org/wiki/Phong-Beleuchtungsmodell)
         
-        self.baseLight = self.ambientColor * AMBIENT_COLOR  # caching for performance
+        self.baseLight = self.ambientColor * AMBIENT_COLOR      # caching for performance
+        self.specularBase = self.specularColor * self.specConst # caching for performance
     
     def baseColorAt(self, point):
         return self.baseLight
@@ -44,10 +48,13 @@ class Material(object):
             reflectedLight = (lightRay.direction).reflect(normal)
             specularFactor = reflectedLight.dot(-rayDirection)
             if specularFactor > 0:
-                color += self.specularColor * lightColor * (specularFactor**self.n) * self.specConst
+                color += self.specularBase * lightColor * (specularFactor**self.n)
         return color
 
 class CheckedMaterial(object):
+    '''
+    Hübsches Schachbrettmuster als Materiel. Funtioniert nur in der xz-Ebene.
+    '''
     
     def __init__(self):
         self.whiteMat = Material(Color(0.5, 0.5, 1), WHITE, glossiness=0.3)
@@ -73,23 +80,20 @@ class CheckedMaterial(object):
 
 class Color(Vector):
     '''
-	Farbe als dreidimensionaler Vektor, der die Rot-, Grün
-	und Blau-Werte abbildet. Alle Werte sind zwischen 0 und
-	1 normalisiert.
-	'''
+    Farbe als dreidimensionaler Vektor, der die Rot-, Grün
+    und Blau-Werte abbildet. Alle Werte sind zwischen 0 und
+    1 normalisiert.
+    '''
 
     def __init__(self, r, g=0, b=0):
         Vector.__init__(self, r, g, b)
 
-    def __mul__(self, other):
-        return super(Color, self).__mul__(other)
-
-    def __add__(self, other):
-        return super(Color, self).__add__(other)
-
     def toValidatedHexString(self):
-        self.vec = tuple([1 if c > 1 else c for c in self.vec])
-        return '#%02X%02X%02X' % (self.vec[0] * 255, self.vec[1] * 255, self.vec[2] * 255)
+        '''
+        Gibt die Farbe validiert in der Form #RRGGBB zurück.
+        '''
+        validated = tuple([255 if c > 1 else c * 255 for c in self.vec])
+        return '#%02X%02X%02X' % validated
 
 BLACK = Color(0, 0, 0)
 GRAY = Color(0.5, 0.5, 0.5)

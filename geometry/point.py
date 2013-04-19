@@ -11,7 +11,7 @@ class Point(object):
             self.point = point
         else:
             self.point = (point, y, z)
-        #self.point = (float(self.point[0]), float(self.point[1]), float(self.point[2]))
+        self.point = (float(self.point[0]), float(self.point[1]), float(self.point[2]))
 
     def __repr__(self):
         return 'Point(%s, %s, %s)' % (repr(self.point[0]), repr(self.point[1]), repr(self.point[2]))

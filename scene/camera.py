@@ -5,6 +5,7 @@ from ray import Ray
 import material
 
 class Camera(object):
+    
     def __init__(self, position, up, f_point, fieldOfView):
         '''
         @param position:    wo steht die Camera (Point)
@@ -35,17 +36,12 @@ class Camera(object):
         self.height = height
         ratio = width / float(height)
         alpha = self.fieldOfView / 2.0
-        print "alpha:", alpha
         self.halfSceneHeight = math.tan(alpha)
-        print "halfSceneHeight:", self.halfSceneHeight
         self.halfSceneWidth = ratio * self.halfSceneHeight
-        print "halfSceneWidth:", self.halfSceneWidth
         self.pixelWidth = self.halfSceneWidth / (width-1) * 2
-        print "pixelWidth:", self.pixelWidth
         self.pixelHeight = self.halfSceneHeight / (height-1) * 2
-        print "pixelHeight:", self.pixelHeight
         self.pixelWidthVec = self.x * self.pixelWidth    #caching for better performance in build_ray
-        self.pixelHeightVec = self.y * self.pixelHeight  #caching for better performance in build_raypixelWidth    #caching for better performance in build_ray
+        self.pixelHeightVec = self.y * self.pixelHeight  #caching for better performance in build_ray
         self.halfSceneWidthVec = self.x * self.halfSceneWidth    #caching for better performance in build_ray
         self.halfSceneHeightVec = self.y * self.halfSceneHeight  #caching for better performance in build_ray
 

@@ -47,6 +47,8 @@ cFrame = Frame(mw, width=WIDTH, height=HEIGHT)
 cFrame.pack()
 canvas = Canvas(cFrame, width=WIDTH, height=HEIGHT, bg="black")
 canvas.pack()
+
+# Bild für Pixelunterstützung
 img = PhotoImage(width=WIDTH, height=HEIGHT)
 canvas.create_image(0, 0, image=img, state="normal", anchor=NW)
 
@@ -54,6 +56,7 @@ canvas.create_image(0, 0, image=img, state="normal", anchor=NW)
 camera = Camera(Point(0,2,10), Vector(0,1,0), Point(0,3,0), FIELD_OF_VIEW)
 camera.setScreenSize(WIDTH, HEIGHT)
 
+# Anfangen zu rendern, nachdem Canvas sichtbar ist
 mw.wait_visibility()
 camera.render(render_pix, objectList, lightList)
 
